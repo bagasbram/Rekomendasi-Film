@@ -19,20 +19,16 @@ model_option = st.selectbox(
     "Pilih Model Machine Learning",
     (
         "Linear Regression",
-        "Random Forest",
-        "Gradient Boosting"
+        "Random Forest"
     )
 )
 
 if model_option == "Linear Regression":
     model = joblib.load("linear_regression.pkl")
-
-elif model_option == "Random Forest":
+else:
     model = joblib.load("random_forest.pkl")
 
-else:
-    model = joblib.load("gradient_boosting.pkl")
-
+# Load scaler
 scaler = joblib.load("scaler.pkl")
 
 st.divider()
@@ -69,33 +65,32 @@ vote_count = st.number_input(
     value=100.0
 )
 
+# Feature Engineering
 profit = revenue - budget
 
-st.write(f"Profit : **{profit:,.0f}**")
+st.write(f"**Profit:** {profit:,.0f}")
 
 if st.button("Prediksi Rating"):
 
-    data = np.array([
-        [
-            budget,
-            revenue,
-            runtime,
-            popularity,
-            vote_count,
-            profit
-        ]
-    ])
+    data = np.array([[
+        budget,
+        revenue,
+        runtime,
+        popularity,
+        vote_count,
+        profit
+    ]])
 
     data = scaler.transform(data)
 
     prediction = model.predict(data)
 
     st.success(
-        f"Prediksi Rating Film : {prediction[0]:.2f}/10"
+        f"🎬 Prediksi Rating Film: **{prediction[0]:.2f}/10**"
     )
 
 st.divider()
 
 st.caption(
-    "Machine Learning Project | The Movies Dataset | Streamlit"
+    "Machine Learning Project | The Movies Dataset | Linear Regression & Random Forest | Streamlit"
 )
